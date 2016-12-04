@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Copy Cat</string>
+    <string name="large_text">
+    </string>
+    <string name="action_settings">Settings</string>
+    <string name="copyBtn">Copy to all devices </string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="copiedTextDesc">Tap to sync item with other devices</string>
+    <string name="sync_ok">√</string>
+</resources>

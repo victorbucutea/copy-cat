@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="7c84ac734cc416aaa9c916190a9f5d282db5701e">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/instant-run_c639acb8565881e0bce0e2d8f201a7d10bdd11ea.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="bc7e99e8d0fc279a05aa91378530f467ad62d443">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-ui-25.0.1_74c1f85bf1911ef22690c3b9854493cce32635ef.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6a1479afe9f1b3645e1cd9a87318976893472818">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-media-compat-25.0.1_36687effd6b9d97cde95c24bde927b80e6565661.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/transition/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c1b6ab157e8e12cb08b9ee82bb5e3c5d22632eb3">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-transition-25.0.1_84f2716d386bac8256a7dc609fe20fbfd0669ef3.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="51eba4a4dd73044f90a9d58dd7ca34adbebfcf4e">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-compat-25.0.1_b3a50c22184b7b0e5b48b8c35dc808f2b1bd931d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-v4/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-25.0.1_be7530f3303cf45a7ee26e28a78bdefa9bdafe7f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Applications/Android Studio.app/Contents/gradle/m2repository/com/google/guava/guava/18.0/guava-18.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="cce0823396aa693798f8882e64213b1772032b09">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/guava-18.0_e11ced1631feb7c9800790c98fd765d3bed1b86c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/design/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="3b236883e0df6002cabb01ce57d00a5b1e5de610">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-design-25.0.1_3e76dcec1bd2ddedcb8be1bcf5cc7bb13f26aaec.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c0bd6ffb002a85b5e7cad29f8558d1cc59539679">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_aa133aa981a3cf082c7f1761ec18f9b445acb0c6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="0b73eb78db7e6cf56213d61ff3a34095f54b271e">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/instant-run-bootstrap_5dc29c34cca57c6b786387678b046cbdb0688a8e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/.gradle/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.9/386a4339ffe52d5d63e80f9bed8d2b1d1a418249/android-async-http-1.4.9.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="386a4339ffe52d5d63e80f9bed8d2b1d1a418249">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/android-async-http-1.4.9_6082bd78d1c0d632eab20f71b9065668a1519edc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="e5343c9d19cb19ff55f6b268c7f3fe8c9d224f6f">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_7f471ce110d1cf2cbd3c5cb77f91bba87813d7e1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.5/6c6c702c89bfff3cd9e80b04d668c5e190d588c6/commons-lang3-3.5.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="6c6c702c89bfff3cd9e80b04d668c5e190d588c6">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/commons-lang3-3.5_b84ba8be1a7b8947267141c31e3f8e6c8b113d4e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="3af8cc51ef7088e56f132780da8c0bd858b6a6ad">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_f324ef42471743423583c2d56b6c777a76692622.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="b24e1c688744078e1fa833ffadf696794761bbe5">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-vector-drawable-25.0.1_a1a05d71aafca31a23c776d53f5d51030352885f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="c5b7145fb34779b6639147b8f2f8dd77c0db771b">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_7e914f0a7f1a4bd5806f32c8f0c21f346ea2b3b7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f7ac4b327fdb9e2ee386f5adc46164927658de4b">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-25.0.1_ef701fcece4b9e6085f25a72be59b0db0f682d8f.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-fragment/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="26c6eef571592c91f29e56fda0bac73321de0c92">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-fragment-25.0.1_ebbc3ead94d6d14893115e1a80ccbfcb76240e0a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="297d4bcf6ed4e747a1bf7d0d094a2d911a8d3a8e">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-25.0.1_57c4f12aa37d4d89c4c6f1d5b7d8052e3c1bfe09.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.0.1/jars/libs/internal_impl-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="f83b00041ecfba705603fec40363416c7de69719">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/internal_impl-25.0.1_edc7cd75e6c4df3591d26ce115a10de2394fdf30.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="772bed2d992b67b9d0327f766cc95cd63031dcd3">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-animated-vector-drawable-25.0.1_d14e9df5502a82f74f4a77f371f2af3f7b1afc1e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/projects/copy-cat/android/app/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.0.1/jars/classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="00d4c8eebf2b681073c72a26bd0849549e51c7cb">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/com.android.support-support-core-utils-25.0.1_5e399360f72e69be3a23b045ff1dbf8b3bbd00bc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/25.0.1/support-annotations-25.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="a09194311f8f89c3e6db09d79f50897a889d615e">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/support-annotations-25.0.1_ed4c1c84bc1595a9942d4ff0b6c1c2fcdcb6babc.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/victor/.gradle/caches/modules-2/files-2.1/cz.msebera.android/httpclient/4.3.6/526a9f794eab830eae4f23a62c572878b3f491ab/httpclient-4.3.6.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.1"
+        sha1="526a9f794eab830eae4f23a62c572878b3f491ab">
+        <dex dex="/Users/victor/projects/copy-cat/android/app/build/intermediates/pre-dexed/debug/httpclient-4.3.6_ddf778b649dcaf1551e41631dd36036bee979623.jar" />
+    </item>
+
+</items>
