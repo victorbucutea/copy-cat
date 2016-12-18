@@ -26,9 +26,12 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.0.1'
     compile 'com.android.support:design:25.0.1'
-    compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-    compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'com.android.volley:volley:1.0.0'
+ //   compile files('/Users/victor/projects/copy-cat/playground/gott-x/socket.io-java-client/jar/socketio.jar')
+//    compile files('/Users/victor/projects/copy-cat/playground/gott-x/socket.io-java-client/java-websocket-impl/Java-WebSocket/dist/java_websocket.jar')
     testCompile 'junit:junit:4.12'
 }
 

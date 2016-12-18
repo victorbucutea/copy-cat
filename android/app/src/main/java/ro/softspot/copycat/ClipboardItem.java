@@ -25,6 +25,11 @@ public class ClipboardItem implements Serializable {
 
     private String description;
 
+    private String source;
+
+
+    private boolean displayed = true;
+
     public ClipboardItem(String firstItem) {
         this.text = firstItem;
         this.createdAt = new Date();
@@ -56,11 +61,21 @@ public class ClipboardItem implements Serializable {
     }
 
     public String getDescription() {
-        return DateUtils.getRelativeTimeSpanString(createdAt.getTime()).toString();
+        String source = getSource() != null ? " from "+getSource()  : "";
+        return DateUtils.getRelativeTimeSpanString(createdAt.getTime()).toString() + source;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String marshall() {
@@ -74,4 +89,11 @@ public class ClipboardItem implements Serializable {
     }
 
 
+    public void setDisplayed(boolean displayed) {
+        this.displayed = displayed;
+    }
+
+    public boolean isDisplayed() {
+        return displayed;
+    }
 }

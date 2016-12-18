@@ -1,4 +1,4 @@
-package ro.softspot.copycat.service;
+package ro.softspot.copycat.service.clipboard;
 
 import android.app.Service;
 import android.content.ClipData;
@@ -11,13 +11,15 @@ import android.util.Log;
 import java.util.List;
 
 import ro.softspot.copycat.ClipboardItem;
+import ro.softspot.copycat.service.sync.SynchronizationService;
+import ro.softspot.copycat.service.sync.SynchronizationService.SynchronizationListener;
 
 /**
  * Created by victor on 12/2/16.
  */
 
 public class ClipboardMonitorService extends Service {
-    private static final String TAG = "ClipboardMonitor";
+    public static final String TAG = "ClipboardMonitor";
     private final int DFLT_MAX_CLIPBOARD_ITEMS = 5;
     private ClipboardManager mClipboardManager;
     private ClipChangeListener mOnPrimaryClipChangedListener = new ClipChangeListener();
@@ -32,14 +34,15 @@ public class ClipboardMonitorService extends Service {
         clipboardList = new ClipboardMonitorListModel(this, DFLT_MAX_CLIPBOARD_ITEMS);
         mClipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         mClipboardManager.addPrimaryClipChangedListener(mOnPrimaryClipChangedListener);
-        Log.d(TAG, "starting clipboard manager service " + this.hashCode());
+        registerForRemoteClipoardUpdate();
+        Log.d(TAG, "started clipboard manager service " + this.hashCode());
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
     }
+
 
     @Override
     public void onDestroy() {
@@ -57,9 +60,20 @@ public class ClipboardMonitorService extends Service {
         return localBinder;
     }
 
-
     public List<ClipboardItem> retrieveClipboardItems() {
         return clipboardList;
+    }
+
+
+    private void registerForRemoteClipoardUpdate() {
+        SynchronizationService.getInstance(this).registerForUpdates(new SynchronizationListener() {
+            @Override
+            public void newItem(ClipboardItem item) {
+                ClipData data = new ClipData("incoming",new String[]{"text/plain"}, new ClipData.Item(item.getText()));
+                data.addItem(new ClipData.Item(item.getSource()));
+                mClipboardManager.setPrimaryClip(data);
+            }
+        });
     }
 
 
@@ -72,9 +86,20 @@ public class ClipboardMonitorService extends Service {
         @Override
         public synchronized void onPrimaryClipChanged() {
             ClipData clip = mClipboardManager.getPrimaryClip();
-            clipboardList.addFirst(clip);
+            if (!clipboardList.addFirst(clip)){
+                return; // item is duplicate or null and shouldn't be added
+            }
+            if (!"incoming".equals(clip.getDescription().getLabel())) {
+                SynchronizationService.getInstance(ClipboardMonitorService.this).sync(clipboardList.getFirst());
+            }
+            broadcastClipboardItemAdded();
         }
 
+    }
+
+    private void broadcastClipboardItemAdded() {
+        Intent intent = new Intent(TAG);
+        sendBroadcast(intent);
     }
 
     /**

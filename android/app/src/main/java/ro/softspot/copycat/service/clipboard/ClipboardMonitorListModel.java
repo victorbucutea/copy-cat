@@ -1,4 +1,4 @@
-package ro.softspot.copycat.service;
+package ro.softspot.copycat.service.clipboard;
 
 import android.app.Service;
 import android.content.ClipData;
@@ -31,31 +31,42 @@ public class ClipboardMonitorListModel extends LinkedList<ClipboardItem> {
         initFromSharedPrefs();
     }
 
-    public void addFirst(ClipData clip) {
+    public boolean addFirst(ClipData clip) {
 
         ClipData.Item itemAt = clip.getItemAt(0);
         if (itemAt == null) {
-            return;
+            return false;
         }
 
         CharSequence text = itemAt.getText();
         if (text == null) {
-            return;
+            return false;
         }
+
 
         String firstItem = text.toString();
 
         if (uniqueStr.add(firstItem.hashCode())) {
 
-            addFirst(new ClipboardItem(firstItem));
+            ClipboardItem item = new ClipboardItem(firstItem);
+
+            if (clip.getItemCount() > 1 && clip.getItemAt(1) != null && clip.getItemAt(1).getText() != null) {
+                item.setSource(clip.getItemAt(1).getText().toString());
+            }
+
+            addFirst(item);
 
             if (size() > maxSize) {
                 removeLast();// ensure max size is not exceeded
             }
 
             storeInSharedPrefs();
+            return true;
         }
+
+        return false;
     }
+
 
 
     private void storeInSharedPrefs() {
@@ -79,5 +90,22 @@ public class ClipboardMonitorListModel extends LinkedList<ClipboardItem> {
                 add(ClipboardItem.unmarshall(clipItem));
             }
         }
+    }
+
+    public boolean isUnique(ClipData clip) {
+
+        ClipData.Item itemAt = clip.getItemAt(0);
+        if (itemAt == null) {
+            return false;
+        }
+
+        CharSequence text = itemAt.getText();
+        if (text == null) {
+            return false;
+        }
+
+        String firstItem = text.toString();
+
+        return !uniqueStr.contains(firstItem.hashCode());
     }
 }

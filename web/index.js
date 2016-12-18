@@ -1,6 +1,7 @@
 var app = require('express')();
 var http = require('http').Server(app);
-var io = require('socket.io')(http, {'destroy buffer size': 1e6});
+var io = require('socket.io');
+io=io.listen(http);
 var db = require('flat-file-db').sync('db/channels.db');
 
 app.get('/', function (req, res) {
@@ -11,6 +12,7 @@ app.get('/', function (req, res) {
 app.post('/channel', function (req, res) {
 
     req.on('data', function (data) {
+        console.log('recording channel '+ data.id);
         data = JSON.parse(data);
 
         // Too much POST data, kill the connection!
@@ -18,11 +20,12 @@ app.post('/channel', function (req, res) {
         if (data.length > 1e6)
             req.connection.destroy();
 
-        throw new EventException();
 
-        db.put(data.name, data, function (err) {
+        db.put(data.id, data, function (err) {
             res.json({message: 'Channel created'});
         });
+
+        initChannel(data.id);
     });
 });
 
@@ -33,19 +36,24 @@ db.keys().forEach(function (key) {
 });
 
 function initChannel(key) {
-    console.log('init channel ' + key);
+
+    if (io.nsps && io.nsps['/'+key]) {
+        return;
+    }
+
+    console.log('creating channel ' + key);
     var channel = io.of('/' + key);
 
-    channel.on('connection', function (socket) {
-        socket.emit('message', 'HELLO');
 
+    channel.on('connection', function (socket) {
 
         var channel = db.get(key);
         channel.lastSeen = new Date();
         db.put(channel.name , channel);
 
-        socket.on('message', function (msg) {
-            socket.emit('message', msg); // relay msg to all clients
+        socket.on('message', function (msg, source) {
+            socket.broadcast.emit('message', msg, source); // relay msg to all clients
+            console.log('incoming message on '+key+ ' :'+msg);
         });
     });
 }

@@ -3,11 +3,11 @@ package ro.softspot.copycat;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import ro.softspot.copycat.service.sync.SynchronizationService;
 
 /**
  * Created by victor on 12/4/16.
@@ -40,6 +40,7 @@ public class SyncAlertDialog {
                     public void onClick(DialogInterface dialog, int which) {
                         Log.d(TAG, "Sending " + input.getText() + " for validation");
                         adapter.markNotSynced();
+                        SynchronizationService.getInstance(mainActivity).sync(item);
                         item.setSynced(true);
                         adapter.notifyDataSetChanged();
                         Toast.makeText(mainActivity, "Item synchronized with all devices ! ",Toast.LENGTH_SHORT).show();

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="ro.softspot.copycat.login.LoginActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_teaser_title"
+        android:fontFamily="monospace"
+        android:id="@+id/textView"
+        android:layout_gravity="center"
+        android:textSize="56sp"
+        android:layout_marginBottom="20dp"
+        android:typeface="sans"/>
+
+    <ImageView
+        android:layout_width="145dp"
+        android:layout_height="78dp"
+        android:src="@drawable/cat_pixel"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/imageView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="26sp"
+        android:layout_margin="20dp"
+        android:fontFamily="monospace"
+        android:gravity="center"
+        android:text="@string/app_teaser_text1"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20sp"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:text="@string/app_teaser_text2"/>
+
+    <Button
+        android:id="@+id/fb"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#3b5998"
+        android:onClick="onClick"
+        android:layout_marginTop="58dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textAllCaps="false"
+        android:text="@string/continue_with_facebook"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:drawableLeft="@drawable/fb_logo_blue_50"/>
+
+
+</LinearLayout>

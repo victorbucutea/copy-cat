@@ -6,27 +6,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import ro.softspot.copycat.service.ClipboardMonitorService;
+import ro.softspot.copycat.service.clipboard.ClipboardMonitorService;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final String REFRESH_DATA_INTENT = "refresh_data";
     private String TAG = "Main";
     private ClipItemsListAdapter adapter;
     private ClipboardMonitorService mService;
@@ -37,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         initClipContentList();
     }
+
 
     @Override
     protected void onStart() {
@@ -47,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "Binding service");
         bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
         startService(serviceIntent);
-
+        registerReceiver(new ClipDataReceiver(),new IntentFilter(ClipboardMonitorService.TAG));
     }
+
 
     @Override
     protected void onStop() {
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initClipContentList() {
         ListView list = (ListView) findViewById(R.id.clip_list);
-        adapter = new ClipItemsListAdapter(this, new ArrayList<ClipboardItem>());
+        adapter = new ClipItemsListAdapter(this);
         list.setAdapter(adapter);
         list.setOnItemClickListener(mMessageClickedHandler);
     }
@@ -70,6 +72,45 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView search = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        search.setOnQueryTextListener( new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextChange(String cs) {
+                addClipboardItemsToList();
+
+                if (TextUtils.isEmpty(cs)){
+                    return true;
+                }
+                adapter.filter(cs);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                addClipboardItemsToList();
+                if (TextUtils.isEmpty(query)){
+                    return true;
+                }
+                adapter.filter(query);
+                return true;
+            }
+        });
+
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                addClipboardItemsToList();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                // Do something when expanded
+                return true;  // Return true to expand action view
+            }
+        });
         return true;
     }
 
@@ -88,25 +129,19 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
             ClipboardMonitorService.LocalBinder binder = (ClipboardMonitorService.LocalBinder) service;
             mService = binder.getService();
             Log.d(TAG, "connected to service " + className.getClassName());
-
-            List<ClipboardItem> clipItems = mService.retrieveClipboardItems();
-            adapter.clearItems();
-            for (ClipboardItem item : clipItems) {
-                adapter.add(item);
-            }
-
+            addClipboardItemsToList();
         }
 
         @Override
@@ -114,6 +149,19 @@ public class MainActivity extends AppCompatActivity {
             Log.d(TAG, "disconnected from service " + arg0.getClassName());
         }
     };
+
+    private void addClipboardItemsToList() {
+        List<ClipboardItem> clipItems = mService.retrieveClipboardItems();
+        adapter.clearItems();
+        for (ClipboardItem item : clipItems) {
+            if (clipItems.indexOf(item) == 0){
+                item.setSynced(true);
+            } else {
+                item.setSynced(false);
+            }
+            adapter.add(item);
+        }
+    }
 
 
     private AdapterView.OnItemClickListener mMessageClickedHandler = new AdapterView.OnItemClickListener() {
@@ -123,4 +171,11 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
     };
+
+    private class ClipDataReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            addClipboardItemsToList();
+        }
+    }
 }
