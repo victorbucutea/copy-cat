@@ -1,7 +1,10 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
+// make public as the static content dir
+app.use(express.static('public'));
 var http = require('http').Server(app);
-var io = require('socket.io');
-io=io.listen(http);
+var io = require('socket.io')(http);
+
 var db = require('flat-file-db').sync('db/channels.db');
 
 app.get('/', function (req, res) {
@@ -12,7 +15,7 @@ app.get('/', function (req, res) {
 app.post('/channel', function (req, res) {
 
     req.on('data', function (data) {
-        console.log('recording channel '+ data.id);
+
         data = JSON.parse(data);
 
         // Too much POST data, kill the connection!

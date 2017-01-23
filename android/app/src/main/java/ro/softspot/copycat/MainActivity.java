@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.view.MenuItemCompat;
@@ -20,7 +19,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import java.util.ArrayList;
 import java.util.List;
 
 import ro.softspot.copycat.service.clipboard.ClipboardMonitorService;

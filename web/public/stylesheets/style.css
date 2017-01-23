@@ -1,8 +1,175 @@
+/*
+Free App template for Bootstrap 3
+Code snippet by maridlcrmn for Bootsnipp.com
+Follow me on Twitter @maridlcrmn
+Image credits: unsplash.com
+Image placeholders: placemi.com
+*/
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font-family: monospace;
 }
 
-a {
-  color: #00B7FF;
+.mt-100 {
+    margin-top: 100px;
+}
+
+.mb-100 {
+    margin-bottom: 100px;
+}
+
+.icon {
+    width: 32px;
+    height: 32px;
+    text-align: center;
+    padding: 7px 8px;
+    border: 2px solid;
+    border-radius: 50%;
+}
+
+.header {
+    padding-top: 50px;
+    background-color: #eee;
+    overflow: hidden;
+}
+
+.footer {
+    color: #887;
+    background-color: #eee;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.content {
+    position: relative;
+    display: table;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.pull-middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.btn {
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.btn-circle {
+    border-radius: 20px;
+}
+
+.input-group input {
+    border: 0;
+    box-shadow: none;
+    padding-right: 30px;
+}
+
+.input-group input:focus,
+.input-group input:active {
+    outline: 0;
+    box-shadow: none;
+}
+
+.input-group-btn:last-child > .btn {
+    z-index: 2;
+    margin-left: -18px;
+    border-radius: 20px;
+}
+
+.devices {
+    padding: 10px;
+    padding-top: 30px;
+}
+
+.panel-link {
+    padding: 10px;
+}
+
+.panel-link:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.panel-link i {
+    vertical-align: middle;
+}
+
+.btn.facebook {
+    background-color: #3b5998;
+    border-color: #3b5998;
+    padding: 3px 15px;
+}
+
+.btn.facebook i {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+h1.page-header {
+    margin-top: -5px;
+}
+
+.sidebar {
+    padding-left: 0;
+}
+
+.main-container {
+    background: #FFF;
+    padding-top: 15px;
+    margin-top: -20px;
+}
+
+.footer {
+    width: 100%;
+}
+
+.clipboard-container {
+    padding: 50px 10px 10px;
+    width: 80%;
+    margin: auto;
+}
+
+.panel-body {
+    max-height: 260px;
+    overflow: scroll;
+}
+
+.clipboard-title {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/* Search form */
+.form-control.search {
+    border: 1px solid #ccc;
+}
+
+/* Clipboard list  */
+
+.clip-list .list-group-item {
+    padding: 30px;
+    overflow: auto;
+}
+
+.clip-list .list-group-item .fa-copy {
+    color: #666;
+}
+
+.clip-list .list-group-item .fa-copy:hover {
+    color: #333;
+    cursor: pointer;
+}
+
+.clip-list .sub-text {
+    color: #666;
+    font-size: 12px;
+}
+
+.clip-list pre {
+    margin-bottom: 0;
+    max-height: 75px;
+    overflow: scroll;
 }

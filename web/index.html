@@ -1,74 +1,309 @@
 <!doctype html>
 <html>
 <head>
-    <title>Socket.IO chat</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font: 13px Helvetica, Arial;
-        }
-
-        form {
-            background: #000;
-            padding: 3px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        form input {
-            border: 0;
-            padding: 10px;
-            width: 90%;
-            margin-right: .5%;
-        }
-
-        form button {
-            width: 9%;
-            background: rgb(130, 224, 255);
-            border: none;
-            padding: 10px;
-        }
-
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        #messages li {
-            padding: 5px 10px;
-        }
-
-        #messages li:nth-child(odd) {
-            background: #eee;
-        }
-    </style>
-
+    <title>Copy cat</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+    <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.0/angular.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="javascripts/main.js"></script>
 </head>
-<body>
-<ul id="messages"></ul>
-<form action="">
-    <input id="m" autocomplete="off"/>
-    <button>Send</button>
-</form>
-<script src="/socket.io/socket.io.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
-    var socket = io('/376347409371405');
-    $('form').submit(function () {
-        socket.emit('message', $('#m').val(), "Web interface");
-        $('#m').val('');
-        return false;
-    });
-    socket.on('message', function (msg, source) {
-        $('#messages').append($('<li>').text(msg + ' - ' + source));
-    });
+<body ng-app="main">
+<div id="fb-root"></div>
+
+<!-- About modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">About</h4>
+            </div>
+            <div class="modal-body">
+                <p>© Copyright 2016. Built with love by <a href="https://www.linkedin.com/in/victor-bucutea-7bb05452">Victor
+                    Bucutea</a>&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="wrapper" ng-controller="MainCtrl">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Copy-Cat </a>
+                <a class="navbar-left" href="#"><img height="50px" src="images/cat_pixel.png"></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="navigation">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="#" data-toggle="modal" data-target="#myModal">About</a>
+                    </li>
+                    <li ng-show="!connected">
+                        <button type="button" class="btn btn-success navbar-btn btn-circle facebook"
+                                onclick="FB.login()">
+                            <i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i> Sign in to see your copied
+                            items
+                        </button>
+                    </li>
+                    <li ng-show="connected">
+                        <a href="#/clip">My copied items</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div ng-view></div>
+</div>
+
+<script id="/main" type="text/ng-template">
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 col-md-offset-1">
+                    <div class="content">
+                        <div class="pull-middle">
+
+                            <h1 class="page-header">Synchronize clipboard accross all devices.</h1>
+
+                            <p class="lead">As simple as Copy/Paste locally.</p>
+
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    <div class="panel-link">
+                                        <i class="fa fa-4x fa-android" aria-hidden="true"></i>
+                                        <span> &nbsp;Get it on android </span>
+                                    </div>
+                                    <div class="panel-link">
+                                        <i class="fa fa-4x fa-windows" aria-hidden="true"></i>
+                                        <span> Get it on windows</span>
+                                    </div>
+                                    <div class="panel-link">
+                                        <i class="fa fa-4x fa-apple" aria-hidden="true"></i>
+                                        <span>&nbsp;Get it on OS X</span>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-md-offset-1 text-center mt-100 mb-100">
+                    <div class="devices">
+                        <img class="img-responsive img-rounded" src="images/devices.png">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 col-md-offset-1 text-center mt-100 mb-100">
+                    <div class="phone">
+                        <img class="img-responsive img-rounded" src="http://placemi.com/djlnr/263x480">
+                    </div>
+                </div>
+                <div class="col-md-5 col-md-offset-1">
+                    <div class="content">
+                        <div class="pull-middle">
+                            <h2 class="h1 page-header">A simple boost in productivity.</h2>
+                            <ul class="media-list">
+                                <li class="media">
+                                    <a class="media-left" href="#">
+                                        <span class="glyphicon glyphicon-floppy-save icon text-success"></span>
+                                    </a>
+
+                                    <div class="media-body">
+                                        <h3 class="media-heading">Install Copy-Cat on your device.</h3>
+
+                                        <p>Stop sending content over email in order to have it available on all your
+                                            devices. Install Copy-Cat</p>
+                                    </div>
+                                </li>
+                                <li class="media">
+                                    <a class="media-left" href="#">
+                                        <span class="glyphicon glyphicon-save icon text-success"></span>
+                                    </a>
+
+                                    <div class="media-body">
+                                        <h3 class="media-heading">Tap copy on your mobile, and paste on your pc.</h3>
+
+                                        <p>Or vice-versa. Copy-cat will make sure your device's cliboards are in sync
+                                            with NO additional clicks.</p>
+                                    </div>
+                                </li>
+                                <li class="media">
+                                    <a class="media-left" href="#">
+                                        <span class="glyphicon glyphicon-user icon text-success"></span>
+                                    </a>
+
+                                    <div class="media-body">
+                                        <h3 class="media-heading">You can even use the web interface to see the copied
+                                            content. </h3>
+
+                                        <p>Pretty simple no ?</p>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer text-center">
+        <div class="container">
+            <small>© Copyright 2016. Built with love by <a
+                    href="https://www.linkedin.com/in/victor-bucutea-7bb05452">Victor Bucutea</a>. Web design by <a
+                    href="https://www.twitter.com/maridlcrmn">@maridlcrmn</a>
+            </small>
+        </div>
+    </footer>
+
+</script>
+
+<script id="/clip" type="text/ng-template">
+        <div class="header clipboard-container">
+            <div class="container-fluid">
+                <div class="row clipboard-title ">
+                    <div class="col-md-12">
+                        <h2>Clipboard content
+                            <a class="btn btn-success pull-right" href="#"
+                               role="button"
+                               data-toggle="modal"
+                               data-target="#newClipModal">
+                                New clipboard item
+                            </a>
+                        </h2>
+                        <h2>
+                            <button class="btn btn-success pull-right" href="#"
+                               role="button"
+                                    ng-click="sendNotif()">
+                                New clipboard item
+                            </button>
+                        </h2>
+                    </div>
+                </div>
+                <br/>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group" ng-show="msgs.length > 1">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </span>
+                                <input type="text" name="q" class="form-control search" ng-model="search_query"
+                                       placeholder="Search...">
+                            </div>
+                        </div>
+                        <ul class="list-group clip-list">
+                            <li ng-repeat="msg in msgs | filter:search_query"
+                                class="list-group-item">
+
+                                <div class="col-md-11">
+                                    <pre contentEditable="true" ng-model="msg.message">{{msg.message}}</pre>
+                                    <span class="sub-text"> {{label(msg)}}</span>
+                                </div>
+                                <div class="col-md-1">
+                                    <i class="fa fa-4x fa-check-circle"
+                                       ng-show="msg.synchronized"
+                                       title="Item is available for paste on all devices"></i>
+
+                                    <i class="fa fa-3x fa-copy"
+                                       ng-show="!msg.synchronized"
+                                       data-target="#confirmResendMessage-{{$index}}"
+                                       data-toggle="modal"></i>
+                                    <span ng-show="!msg.synchronized">Copy</span>
+                                </div>
+
+                                <div class="modal fade" id="confirmResendMessage-{{$index}}" role="dialog">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Send item to remote clipboards.</h4>
+                                            </div>
+                                            <div class="modal-body">ƒ
+                                                <p>Clicking Save will make this item available for 'paste' on all
+                                                    devices.</p>
+
+                                                <p>Do you want to send this item to your devices ? </p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-default"
+                                                        data-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-primary"
+                                                        data-dismiss="modal"
+                                                        ng-click="resendMessage(msg)">
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <!-- /.modal-content -->
+                                    </div>
+                                    <!-- /.modal-dialog -->
+                                </div>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    <div class="modal fade" id="newClipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">New Clipboard item</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control" ng-model="newMessage"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" ng-click="sendMessage(newMessage)" class="btn btn-primary"
+                            data-dismiss="modal">
+                        Send to all devices
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
 </script>
 </body>
 </html>
