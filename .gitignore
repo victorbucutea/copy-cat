@@ -9,3 +9,4 @@ android/.idea
 .externalNativeBuild
 /playground
 node_modules
+bower_components

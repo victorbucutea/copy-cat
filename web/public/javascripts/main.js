@@ -22,14 +22,12 @@ main.factory('FacebookService', ['$q', '$rootScope', function ($q, $rootScope) {
     var defer = $q.defer();
 
     defer.promise.then(function () {
-        // FB.Init...
         FB.init({
             appId: '1760834697570757',
             xfbml: true,
             version: 'v2.8'
         });
         FB.AppEvents.logPageView();
-
     });
 
     window.fbAsyncInit = angular.bind(this, init);
@@ -102,17 +100,14 @@ main.controller('MainCtrl', function ($scope, $location, FacebookService) {
                 };
 
                 $scope.sendNotif = function(newMsg) {
-
                     var socket = io('/' + uid);
                     socket.emit('message', 'Happy new message', 'Nexus 5');
-
                 };
 
                 $scope.label = function (msg) {
                     if (!msg) {
                         return;
                     }
-
                     return 'Copied ' + moment(msg.date.getTime()).fromNow() + ' from ' + msg.src;
                 };
 

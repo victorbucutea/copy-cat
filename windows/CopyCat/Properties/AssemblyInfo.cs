@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("CopyCat")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("General Electric")]
+[assembly: AssemblyCompany("Softspot SRL")]
 [assembly: AssemblyProduct("CopyCat")]
-[assembly: AssemblyCopyright("Copyright © General Electric 2017")]
+[assembly: AssemblyCopyright("Copyright © Softspot SRL")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

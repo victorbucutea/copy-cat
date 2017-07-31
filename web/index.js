@@ -15,14 +15,11 @@ app.get('/', function (req, res) {
 app.post('/channel', function (req, res) {
 
     req.on('data', function (data) {
-
         data = JSON.parse(data);
-
         // Too much POST data, kill the connection!
         // 1e6 ~ 1MB
         if (data.length > 1e6)
             req.connection.destroy();
-
 
         db.put(data.id, data, function (err) {
             res.json({message: 'Channel created'});
@@ -40,27 +37,24 @@ db.keys().forEach(function (key) {
 
 function initChannel(key) {
 
-    if (io.nsps && io.nsps['/'+key]) {
+    if (io.nsps && io.nsps['/'+key])
         return;
-    }
 
     console.log('creating channel ' + key);
     var channel = io.of('/' + key);
 
-
     channel.on('connection', function (socket) {
-
         var channel = db.get(key);
         channel.lastSeen = new Date();
         db.put(channel.name , channel);
-
         socket.on('message', function (msg, source) {
             socket.broadcast.emit('message', msg, source); // relay msg to all clients
             console.log('incoming message on '+key+ ' :'+msg);
         });
+
+        //socket.emit('message','Android','hello from the other side')
     });
 }
-
 
 http.listen(3000, function () {
     console.log('listening on *:3000');
