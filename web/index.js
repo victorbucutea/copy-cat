@@ -37,7 +37,7 @@ db.keys().forEach(function (key) {
 
 function initChannel(key) {
 
-    if (io.nsps && io.nsps['/'+key])
+    if (io.nsps && io.nsps['/' + key])
         return;
 
     console.log('creating channel ' + key);
@@ -46,10 +46,10 @@ function initChannel(key) {
     channel.on('connection', function (socket) {
         var channel = db.get(key);
         channel.lastSeen = new Date();
-        db.put(channel.name , channel);
+        db.put(channel.name, channel);
         socket.on('message', function (msg, source) {
             socket.broadcast.emit('message', msg, source); // relay msg to all clients
-            console.log('incoming message on '+key+ ' :'+msg);
+            console.log('incoming message on ' + key + ' :' + msg + ', ' + source);
         });
 
         //socket.emit('message','Android','hello from the other side')

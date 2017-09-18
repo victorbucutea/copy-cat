@@ -8,7 +8,7 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="560"
+        Title="MainWindow" Height="350" Width="590"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -48,9 +48,6 @@
                                 NoLeftClickDelay="True"
                                 LeftClickCommand="{StaticResource MessageCommand}"
                                 LeftClickCommandParameter="{Binding ElementName=CatWindow}">
-                    <!--<tb:TaskbarIcon.TrayPopup>
-                        <local:TrayTooltip  x:Name="TrayTooltip"/>
-                    </tb:TaskbarIcon.TrayPopup>-->
                     <tb:TaskbarIcon.ContextMenu>
                         <ContextMenu  >
                             <MenuItem Header="Exit" Click="Click_Exit" />
@@ -79,7 +76,9 @@
                     </DockPanel>
                 </materialDesign:ColorZone>
 
-                <ListView Name="clipList" Margin="0 60 0 0"  HorizontalContentAlignment="Stretch"  SelectionChanged="clipList_SelectionChanged">
+                <TextBlock FontFamily="consolas" x:Name="NoClipMsg" FontSize="14"  Margin="0 180 0 0 " HorizontalAlignment="Center" Grid.Row="0" Text="No copy/paste recorded"/>
+
+                <ListView Name="clipList" Margin="0 60 0 0"  HorizontalContentAlignment="Stretch"  SelectionChanged="clipList_SelectionChanged" ScrollViewer.CanContentScroll="False">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid Margin="5" MaxHeight="150"  Style="{StaticResource MousePointer}" ToolTip="Click to synchronize item with all devices" >
@@ -90,8 +89,8 @@
 
 
                                 <TextBlock FontFamily="consolas" Grid.Row="0" 
-                                           FontSize="16" Text="{Binding Text}" 
-                                           MaxWidth="700"
+                                           FontSize="12" Text="{Binding Text}" 
+                                           MaxWidth="540"
                                            TextTrimming="CharacterEllipsis"
                                            HorizontalAlignment="Left"/>
 

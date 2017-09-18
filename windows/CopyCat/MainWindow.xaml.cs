@@ -8,7 +8,12 @@ using Quobject.EngineIoClientDotNet.ComponentEmitter;
 using Quobject.SocketIoClientDotNet.Client;
 using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 using System.Collections.ObjectModel;
-using Hardcodet.Wpf.TaskbarNotification;
+using Facebook;
+using System.Dynamic;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace CopyCat
 {
@@ -32,10 +37,13 @@ namespace CopyCat
             ResizeMode = ResizeMode.CanResizeWithGrip;
 
             items = new ObservableCollection<ClipboardItem>();
-            items.Add(new ClipboardItem() { Source = "Mobile", Text = "Some text from remote mobile" });
             clipList.ItemsSource = items;
             DataContext = items;
+
+            ShowLogin();
         }
+        
+
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -50,10 +58,10 @@ namespace CopyCat
 
             if ("YES".Equals(result))
             {
-                var item = (ClipboardItem)clipList.SelectedItem;
+                var item = (ClipboardItem) clipList.SelectedItem;
                 item.IsChecked = true;
                 item.OnPropertyChanged("IsChecked");
-                socket.Emit("message", item.Source, item.Text);
+                socket.Emit("message", item.Text, item.Source);
 
                 foreach (ClipboardItem clipitem in items)
                 {
@@ -74,17 +82,109 @@ namespace CopyCat
 
         private void Click_Exit(object sender, RoutedEventArgs e)
         {
-            socket.Close();
+            if (socket != null)
+            {
+                socket.Close();
+            }
             System.Windows.Application.Current.Shutdown();
         }
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            //5 Monitor clipboard 
-            //6 on click selected item re-emit message
+            initClipboardListener();
+        }
+
+        private void ShowLogin()
+        {
+            LoginWindow dialog = new LoginWindow() { AppID = "820943364752707" };
+            if (dialog.ShowDialog() == true)
+            {
+                string accessToken = dialog.AccessToken;
+                var fb = new FacebookClient(accessToken);
+                dynamic parameters = new ExpandoObject();
+                parameters.fields = "id,name,email";
+                dynamic me = fb.Get("me", parameters);
+                var email = me.email;
+                if (email != null)
+                {
+                    email = email.Replace("@", "_");
+                    initSocketIo(email);
+                }
+            } else
+            {
+                Application.Current.Shutdown(); 
+            }
+        }
+
+        private void initClipboardListener()
+        {
+            var windowClipboardManager = new ClipboardManager(this);
+            windowClipboardManager.ClipboardChanged += ClipboardChanged;
+        }
+
+        private void ClipboardChanged(object sender, EventArgs e)
+        {
+            // Handle your clipboard update here, debug logging example:
+            if (Clipboard.ContainsText())
+            {
+                AddItem(new ClipboardItem() { IsChecked = true, Source = "Windows", Text = Clipboard.GetText() });
+            }
+        }
+
+        private void AddItem(ClipboardItem item)
+        {
+            items.Insert(0,item);
+            socket.Emit("message", Clipboard.GetText(), "Windows");
+            foreach (ClipboardItem clipitem in items)
+            {
+                if (clipitem != item)
+                {
+                    clipitem.IsChecked = false;
+                    clipitem.OnPropertyChanged("IsChecked");
+                }
+            }
+
+            if(items.Count > 0)
+            {
+                NoClipMsg.Visibility = Visibility.Hidden;
+            }
+
+            if(items.Count > 5)
+            {
+                items.RemoveAt(items.Count - 1);
+            }
+        }
+
+
+        void CreateChannel(string channelName)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                var req = new 
+                {
+                    id= channelName
+                };
+                StringContent content = new StringContent(JsonConvert.SerializeObject(req).ToString(), Encoding.UTF8, "application/json");
+                Task<HttpResponseMessage> task = client.PostAsync("http://localhost:3000/channel", content);
+                task.Wait();
+                task.Result.EnsureSuccessStatusCode();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error contacting the server. Check internet connection or try again later.","Error",
+                    MessageBoxButton.OK,MessageBoxImage.Error);
+                Application.Current.Shutdown();
+            }
+            //TODO status Disconnected (e.g. server shutdown) should become connecting after some time
+        }
+
+        private  void initSocketIo(string channel)
+        {
+            CreateChannel(channel);
 
             manager = new Manager(new Uri("http://localhost:3000"));
-            socket = socket = manager.Socket("/mychannel");
+            socket = socket = manager.Socket("/"+channel);
             socket.On(Socket.EVENT_CONNECT, () =>
             {
                 Console.WriteLine("EVENT_CONNECT");
@@ -92,22 +192,22 @@ namespace CopyCat
                 {
                     StatusIndicator.Background = new SolidColorBrush(Color.FromRgb(60, 118, 61));
                     StatusIndicator.Content = "Connected";
-                    StatusIndicator.ToolTip = "Ready to send/receive";
+                    StatusIndicator.ToolTip = "Ready to send/receive clipboard content";
                 });
 
                 socket.On("message", new ListenerImpl2Params((msg1, msg2) =>
                 {
                     App.Current.Dispatcher.Invoke(delegate
                     {
-                        String text = (String)msg2;
-                        String src = (String)msg1;
+                        String text = (String)msg1;
+                        String src = (String)msg2;
                         String baloonText = text;
                         if (text.Length > 30)
                         {
                             baloonText = baloonText.Substring(0, 30) + "...";
                         }
-                        items.Add(new ClipboardItem() { Source = src, Text = text, IsChecked = true });
-                        tbIcon.ShowBalloonTip("New Message", baloonText, BalloonIcon.Info);
+
+                        AddItem(new ClipboardItem() { Source = src, Text = text, IsChecked = true });
                     });
                 }));
             });
@@ -122,8 +222,23 @@ namespace CopyCat
                     StatusIndicator.ToolTip = "Server has closed connection. Reconnecting ...";
                 });
             });
+
+
+
+            socket.On(Socket.EVENT_ERROR, (data) =>
+            {
+                Console.WriteLine("EVENT_ERROR");
+                App.Current.Dispatcher.Invoke(delegate
+                {
+                    StatusIndicator.Background = new SolidColorBrush(Color.FromRgb(162, 28, 28));
+                    StatusIndicator.Content = "Error";
+                    StatusIndicator.ToolTip = "Error establishing connection. Reconnecting ...";
+                });
+            });
         }
     }
+
+
 
     public class ClipboardItem : INotifyPropertyChanged
     {

@@ -23,7 +23,7 @@ main.factory('FacebookService', ['$q', '$rootScope', function ($q, $rootScope) {
 
     defer.promise.then(function () {
         FB.init({
-            appId: '1760834697570757',
+            appId: '583133798551881',
             xfbml: true,
             version: 'v2.8'
         });
@@ -58,61 +58,83 @@ main.directive('contenteditable', function () {
 });
 
 
-main.controller('MainCtrl', function ($scope, $location, FacebookService) {
+main.controller('MainCtrl', function ($scope, $location, $http, FacebookService) {
 
     FacebookService.promise.then(function () {
 
         FB.getLoginStatus(function (response) {
             if (response.status === 'connected') {
 
-                $scope.connected = true;
-
-                window.uid = response.authResponse.userID;
-                window.socket = io('/' + uid);
-                window.accessToken = response.authResponse.accessToken;
-
-                $scope.msgs = [];
-
-                var clearSyncStatus = function () {
-                    $scope.msgs.forEach(function (item) {
-                        item.synchronized = false;
-                    });
-                };
-
-
-                socket.on('message', function (msg, source) {
-                    clearSyncStatus();
-                    $scope.msgs.push({message: msg, src: source, synchronized: true, date: new Date()});
-                    $scope.$apply();
-                });
-
-                $scope.sendMessage = function (newMsg) {
-                    clearSyncStatus();
-                    socket.emit('message', newMsg, 'Web interface');
-                    var msg = {message: newMsg, src: 'Web interface', synchronized: true, date: new Date()};
-                    $scope.msgs.push(msg);
-                };
-
-                $scope.resendMessage = function (newMsg) {
-                    clearSyncStatus();
-                    socket.emit('message', newMsg.message, 'Web interface');
-                    newMsg.synchronized = true;
-                };
-
-                $scope.sendNotif = function(newMsg) {
-                    var socket = io('/' + uid);
-                    socket.emit('message', 'Happy new message', 'Nexus 5');
-                };
-
-                $scope.label = function (msg) {
-                    if (!msg) {
-                        return;
+                // query for email
+                FB.api('/me', {
+                    fields: 'email'
+                }, function (response) {
+                    if (!response || response.error) {
+                        console.error('error while querying user email', response);
+                        return
                     }
-                    return 'Copied ' + moment(msg.date.getTime()).fromNow() + ' from ' + msg.src;
-                };
 
-                $location.path('/clip');
-                $scope.$apply();
+                    $scope.connected = true;
+
+                    window.uid = response.email.replace("@","_");
+                    window.socket = io('/' + uid);
+
+                    $scope.msgs = [];
+
+                    var clearSyncStatus = function () {
+                        $scope.msgs.forEach(function (item) {
+                            item.synchronized = false;
+                        });
+                    };
+
+                    var pushMessage = function(msg) {
+                        if ($scope.msgs.length == 5) {
+                            $scope.msgs.splice(4,1);
+                        }
+                        $scope.msgs.unshift(msg);
+                    };
+
+                    $http.post('/channel', {id: uid}).then(function () {
+                    }, function () {
+                        $('#errorModal').modal('show');
+                    });
+
+
+                    socket.on('message', function (msg, source) {
+                        clearSyncStatus();
+                        pushMessage({message: msg, src: source, synchronized: true, date: new Date()});
+                        $scope.$apply();
+                    });
+
+                    $scope.sendMessage = function (newMsg) {
+                        clearSyncStatus();
+                        socket.emit('message', newMsg, 'Web interface');
+                        var msg = {message: newMsg, src: 'Web interface', synchronized: true, date: new Date()};
+                        pushMessage(msg);
+                    };
+
+                    $scope.resendMessage = function (newMsg) {
+                        clearSyncStatus();
+                        socket.emit('message', newMsg.message, 'Web interface');
+                        newMsg.synchronized = true;
+                    };
+
+                    $scope.sendNotif = function (newMsg) {
+                        var socket = io('/' + uid);
+                        socket.emit('message', 'Happy new message', 'Nexus 5');
+                    };
+
+                    $scope.label = function (msg) {
+                        if (!msg) {
+                            return;
+                        }
+                        return 'Copied ' + moment(msg.date.getTime()).fromNow() + ' from ' + msg.src;
+                    };
+
+                    $location.path('/clip');
+                    $scope.$apply();
+
+                });
 
             } else if (response.status === 'not_authorized') {
                 // the user is logged in to Facebook,
@@ -123,7 +145,8 @@ main.controller('MainCtrl', function ($scope, $location, FacebookService) {
         });
 
     });
-});
+})
+;
 
 
 (function (d, s, id) {

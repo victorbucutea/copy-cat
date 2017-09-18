@@ -1,6 +1,5 @@
 ﻿
 using System.Windows.Controls;
-using Socket = Quobject.SocketIoClientDotNet.Client.Socket;
 
 
 
@@ -13,6 +12,8 @@ namespace CopyCat
     {
 
         public string Text { get; set; } = "Sync this item with the rest of your devices ?";
+
+        public bool NoBtnHidden = true;
 
         public Dialog()
         {

@@ -24,11 +24,11 @@
             <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="materialDesign:DialogHost.CloseDialogCommand" 
                                                             CommandParameter="YES">
-                ACCEPT
+                OK
             </Button>
             <Button IsCancel="True" Margin="8 0 0 0" Style="{DynamicResource MaterialDesignFlatButton}"
                     Command="materialDesign:DialogHost.CloseDialogCommand" 
-                                                            CommandParameter="NO">
+                                                            CommandParameter="NO" Visibility="{Binding NoBtnHidden}">
                 CANCEL
             </Button>
         </StackPanel>
