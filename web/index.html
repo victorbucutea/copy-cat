@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
     <link rel="stylesheet" type="text/css" href="stylesheets/font-awesome.min.css">
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.0/angular.js"></script>
@@ -105,7 +105,7 @@
                                     </div>
                                     <div class="panel-link">
                                         <i class="fa fa-4x fa-windows" aria-hidden="true"></i>
-                                        <span> Get it on windows</span>
+                                        <span> &nbsp; <a href="binaries/Copy Cat.msi">Get it on windows</a></span>
                                     </div>
                                     <div class="panel-link">
                                         <i class="fa fa-4x fa-apple" aria-hidden="true"></i>
@@ -227,7 +227,7 @@
                             class="list-group-item">
 
                             <div class="col-md-11">
-                                <pre contentEditable="true" ng-model="msg.message">{{msg.message}}</pre>
+                                <pre contentEditable="true" ng-model="msg.message" ng-bind="msg.message"></pre>
                                 <span class="sub-text"> {{label(msg)}}</span>
                             </div>
                             <div class="col-md-1">

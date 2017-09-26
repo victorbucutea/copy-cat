@@ -11,5 +11,8 @@
     "morgan": "~1.7.0",
     "serve-favicon": "~2.3.0",
     "socket.io": "^1.7.1"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }

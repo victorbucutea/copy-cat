@@ -73,8 +73,6 @@ namespace CopyCat
         IntPtr webBrowser_MessageHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             //msg = 130 is the last call for when the window gets closed on a window.close() in javascript
-
-            Console.WriteLine("message "+msg + " param " + lParam);
             if (msg == 130)
             {
                 this.Close();

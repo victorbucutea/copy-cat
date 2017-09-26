@@ -127,14 +127,17 @@ namespace CopyCat
             // Handle your clipboard update here, debug logging example:
             if (Clipboard.ContainsText())
             {
-                AddItem(new ClipboardItem() { IsChecked = true, Source = "Windows", Text = Clipboard.GetText() });
+                AddItem(new ClipboardItem() { IsChecked = true, Source = "Windows", Text = Clipboard.GetText() }, true);
             }
         }
 
-        private void AddItem(ClipboardItem item)
+        private void AddItem(ClipboardItem item, bool emit)
         {
             items.Insert(0,item);
-            socket.Emit("message", Clipboard.GetText(), "Windows");
+            if (emit)
+            {
+                socket.Emit("message", Clipboard.GetText(), "Windows");
+            }
             foreach (ClipboardItem clipitem in items)
             {
                 if (clipitem != item)
@@ -166,7 +169,7 @@ namespace CopyCat
                     id= channelName
                 };
                 StringContent content = new StringContent(JsonConvert.SerializeObject(req).ToString(), Encoding.UTF8, "application/json");
-                Task<HttpResponseMessage> task = client.PostAsync("http://localhost:3000/channel", content);
+                Task<HttpResponseMessage> task = client.PostAsync("https://infinite-springs-96814.herokuapp.com/channel", content);
                 task.Wait();
                 task.Result.EnsureSuccessStatusCode();
             }
@@ -183,7 +186,7 @@ namespace CopyCat
         {
             CreateChannel(channel);
 
-            manager = new Manager(new Uri("http://localhost:3000"));
+            manager = new Manager(new Uri("https://infinite-springs-96814.herokuapp.com/"));
             socket = socket = manager.Socket("/"+channel);
             socket.On(Socket.EVENT_CONNECT, () =>
             {
@@ -207,7 +210,7 @@ namespace CopyCat
                             baloonText = baloonText.Substring(0, 30) + "...";
                         }
 
-                        AddItem(new ClipboardItem() { Source = src, Text = text, IsChecked = true });
+                        AddItem(new ClipboardItem() { Source = src, Text = text, IsChecked = true },false);
                     });
                 }));
             });
