@@ -1,0 +1,36 @@
+﻿<UserControl x:Class="CopyCat.Dialog"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             mc:Ignorable="d" 
+             DataContext="{Binding RelativeSource={RelativeSource Self}}"
+             >
+
+    <Grid Margin="16"  >
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <TextBlock wpf:HintAssist.Hint="Name"
+                 Margin="0 6 0 0"
+                 FontSize="14" Grid.Row="0"
+                 Text="{Binding Text}"
+                 />
+        <StackPanel Orientation="Horizontal" Grid.Row="1"
+                    Margin="0 14 0 0">
+            <Button IsDefault="True" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="materialDesign:DialogHost.CloseDialogCommand" 
+                                                            CommandParameter="YES">
+                OK
+            </Button>
+            <Button IsCancel="True" Margin="8 0 0 0" Style="{DynamicResource MaterialDesignFlatButton}"
+                    Command="materialDesign:DialogHost.CloseDialogCommand" 
+                                                            CommandParameter="NO" Visibility="{Binding NoBtnHidden}">
+                CANCEL
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

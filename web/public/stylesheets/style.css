@@ -133,8 +133,6 @@ h1.page-header {
 }
 
 .panel-body {
-    max-height: 260px;
-    overflow: scroll;
 }
 
 .clipboard-title {
@@ -170,6 +168,6 @@ h1.page-header {
 
 .clip-list pre {
     margin-bottom: 0;
-    max-height: 75px;
-    overflow: scroll;
+    max-height: 175px;
+    overflow: auto;
 }
