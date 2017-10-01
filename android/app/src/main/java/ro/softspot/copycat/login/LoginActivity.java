@@ -1,9 +1,12 @@
 package ro.softspot.copycat.login;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.AccessToken;
@@ -11,9 +14,14 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -48,15 +56,9 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        saveCurrentUser();
-    }
-
-    private void saveCurrentUser() {
+    private void saveCurrentUser(String email) {
         SharedPreferences.Editor editor = getSharedPreferences("UserDetails", MODE_PRIVATE).edit();
-        editor.putString("user", getCurrentAccessToken().getUserId());
+        editor.putString("user", email);
         editor.apply();
     }
 
@@ -71,10 +73,55 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void onFacebookLoginSucces() {
-        saveCurrentUser();
-        String userId = AccessToken.getCurrentAccessToken().getUserId();
-        SynchronizationService.getInstance(this).newClient(this, userId);
-        goToMainActivity();
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.v("LoginActivity", response.toString());
+
+                        if (object == null) {
+                            showNoConnectionError();
+                            return;
+                        }
+                        // Application code
+                        try {
+                            String email = object.getString("email");
+                            email = email.replaceAll("@", "_");
+                            saveCurrentUser(email);
+                            SharedPreferences.Editor editor = getSharedPreferences("UserInfo", MODE_PRIVATE).edit();
+                            editor.putString("user",email);
+                            editor.apply();
+                            SynchronizationService.getInstance(LoginActivity.this).newClient(LoginActivity.this);
+                            goToMainActivity();
+                        } catch (JSONException e) {
+                            Log.e("LOGIN", "Error while parsing fb graph response ", e);
+                        }
+                    }
+
+                    private void showNoConnectionError() {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                        builder
+                                .setTitle("Error")
+                                .setMessage("Cannot contact server")
+                                .setCancelable(false)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener()
+                                {
+                                    public void onClick(DialogInterface dialog, int id)
+                                    {
+                                        dialog.cancel();
+                                        finishAffinity();
+                                    }
+                                });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "email");
+        request.setParameters(parameters);
+        request.executeAsync();
     }
 
 
@@ -90,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess(LoginResult loginResult) {
-           onFacebookLoginSucces();
+            onFacebookLoginSucces();
         }
 
         @Override

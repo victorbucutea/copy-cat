@@ -12,6 +12,7 @@ import java.util.List;
 
 import ro.softspot.copycat.ClipboardItem;
 import ro.softspot.copycat.service.sync.SynchronizationService;
+import ro.softspot.copycat.service.sync.SynchronizationService.ConnectionStatusListener;
 import ro.softspot.copycat.service.sync.SynchronizationService.SynchronizationListener;
 
 /**
@@ -69,8 +70,7 @@ public class ClipboardMonitorService extends Service {
         SynchronizationService.getInstance(this).registerForUpdates(new SynchronizationListener() {
             @Override
             public void newItem(ClipboardItem item) {
-                ClipData data = new ClipData("incoming",new String[]{"text/plain"}, new ClipData.Item(item.getText()));
-                data.addItem(new ClipData.Item(item.getSource()));
+                ClipData data = new ClipData("incoming||" + item.getSource(), new String[]{"text/plain"}, new ClipData.Item(item.getText()));
                 mClipboardManager.setPrimaryClip(data);
             }
         });
@@ -86,12 +86,15 @@ public class ClipboardMonitorService extends Service {
         @Override
         public synchronized void onPrimaryClipChanged() {
             ClipData clip = mClipboardManager.getPrimaryClip();
-            if (!clipboardList.addFirst(clip)){
+            if (!clipboardList.addFirst(clip)) {
                 return; // item is duplicate or null and shouldn't be added
             }
-            if (!"incoming".equals(clip.getDescription().getLabel())) {
+
+            CharSequence label = clip.getDescription().getLabel();
+            if (label == null || !label.toString().startsWith("incoming")) {
                 SynchronizationService.getInstance(ClipboardMonitorService.this).sync(clipboardList.getFirst());
             }
+
             broadcastClipboardItemAdded();
         }
 

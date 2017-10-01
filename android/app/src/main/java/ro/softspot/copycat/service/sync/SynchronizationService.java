@@ -2,6 +2,7 @@ package ro.softspot.copycat.service.sync;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
@@ -12,6 +13,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.facebook.GraphRequest;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.Manager;
 import com.github.nkzawa.socketio.client.Socket;
@@ -25,6 +27,8 @@ import java.net.URISyntaxException;
 import java.util.concurrent.Executors;
 
 import ro.softspot.copycat.ClipboardItem;
+import ro.softspot.copycat.login.AlertDialogActivity;
+import ro.softspot.copycat.login.LoginActivity;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.android.volley.Request.Method.POST;
@@ -35,41 +39,55 @@ import static com.android.volley.Request.Method.POST;
 
 public class SynchronizationService {
 
-    private static final String ENDPOINT_URL = "http://192.168.0.141:3000";
+    private static final String ENDPOINT_URL = "https://infinite-springs-96814.herokuapp.com";
     private static final String TAG = "SyncService";
     private static SynchronizationService instance;
+    private String email;
     private Manager manager;
     private Socket socket;
 
     private SynchronizationListener listener;
+    private ConnectionStatusListener statusListener;
 
 
     private SynchronizationService(Context ctxt) {
 
         try {
             manager = new Manager(new URI(ENDPOINT_URL));
+            SharedPreferences editor = ctxt.getSharedPreferences("UserInfo", MODE_PRIVATE);
+            String email = editor.getString("user", "");
+            this.email = email;
+            Log.v(TAG, "Creating sync service with socket for nsp " + email);
+            socket = manager.socket("/" + email);
 
-            // attempt to initialize channel from Login Holder
-            SharedPreferences prefs = ctxt.getSharedPreferences("UserDetails", MODE_PRIVATE);
-            final String currentAccessToken = prefs.getString("user", null);
+            socket.on(Socket.EVENT_CONNECT, new ConnectedMsgListener());
+            socket.on(Socket.EVENT_CONNECT_ERROR, new ErrorMsgListener());
+            socket.on(Socket.EVENT_ERROR, new ErrorMsgListener());
+            socket.on(Socket.EVENT_DISCONNECT, new ErrorMsgListener());
 
-            if (currentAccessToken != null) {
-                socket = manager.socket("/" + currentAccessToken);
-                socket.connect();
-            } else {
-                throw new IllegalStateException("Should not initialize Sync Service" +
-                        " without succesful login and persistence of id ");
-            }
+            socket.connect();
+
+
+
         } catch (URISyntaxException e) {
             Log.e(TAG, "Cannot parse URL ", e);
         }
 
     }
 
+    public static SynchronizationService getInstance(Context ctxt) {
+
+        if (instance == null) {
+            instance = new SynchronizationService(ctxt);
+        }
+        return instance;
+    }
+
     public void sync(final ClipboardItem item) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG, " Sending clipped data :" + item.getText());
                 socket.emit("message", item.getText(), Build.MODEL);
             }
         });
@@ -77,15 +95,14 @@ public class SynchronizationService {
 
     public void registerForUpdates(SynchronizationListener listener) {
         this.listener = listener;
-        socket.off();
-        socket.on("message",new NamespaceMsgListener());
+        socket.off("message");
+        socket.on("message", new NamespaceMsgListener());
     }
 
-
-    public void newClient(final Context context, final String id) {
+    public void newClient(final Context context) {
         try {
             JSONObject object = new JSONObject();
-            object.put("id", id);
+            object.put("id", this.email);
             RequestQueue queue = Volley.newRequestQueue(context);
 
             // Request a string response from the provided URL.
@@ -93,19 +110,18 @@ public class SynchronizationService {
                     new Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            socket.off();
-                            socket.on("message",new NamespaceMsgListener());
-                            Log.i(TAG, "Succesfully registered channel " + id);
+                            socket.off("message");
+                            socket.on("message", new NamespaceMsgListener());
+                            Log.i(TAG, "Succesfully registered channel " + email);
                         }
                     },
                     new ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-                            alertDialog.setTitle("Error ");
-                            alertDialog.setMessage("Cannot contact server !");
-                            alertDialog.create().show();
-                            Log.e(TAG, "Failed to register " + id + ".");
+                            Intent i = new Intent(context, AlertDialogActivity.class);
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(i);
+                            Log.e(TAG, "Failed to register " + email + ".");
                         }
                     });
 
@@ -117,7 +133,16 @@ public class SynchronizationService {
         }
     }
 
+    public void registerForConnectionStatus(ConnectionStatusListener connectionStatusListener) {
+        this.statusListener = connectionStatusListener;
+    }
 
+
+    /****************************
+     * Socket listeners
+     * <p>
+     * for message, connection and error
+     */
     private class NamespaceMsgListener implements Emitter.Listener {
 
         @Override
@@ -138,17 +163,34 @@ public class SynchronizationService {
         }
     }
 
+    private class ConnectedMsgListener implements Emitter.Listener {
+        @Override
+        public void call(final Object... args) {
+            if (statusListener != null) {
+                statusListener.connected();
+            }
+        }
+    }
+
+    private class ErrorMsgListener implements Emitter.Listener {
+        @Override
+        public void call(final Object... args) {
+            if (statusListener != null) {
+                statusListener.disconnected();
+            }
+
+        }
+    }
+
     public interface SynchronizationListener {
         public void newItem(ClipboardItem item);
     }
 
+    public interface ConnectionStatusListener {
+        void connected();
 
-    public static SynchronizationService getInstance(Context ctxt) {
-
-        if (instance == null) {
-            instance = new SynchronizationService(ctxt);
-        }
-        return instance;
+        void disconnected();
     }
+
 
 }
