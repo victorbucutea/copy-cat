@@ -18,7 +18,10 @@
         <activity
             android:theme="@style/AppTheme.NoActionBar"
             android:name=".MainActivity">
+        </activity>
 
+        <activity
+            android:name=".login.AlertDialogActivity">
         </activity>
 
         <activity android:name=".login.LoginActivity"

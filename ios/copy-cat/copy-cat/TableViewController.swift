@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SocketIO
 
 class TableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -20,6 +21,10 @@ class TableViewController: UIViewController, UITableViewDelegate, UITableViewDat
         tableView.delegate = self
         tableView.dataSource = self
         initClipboardModel()
+        let socket = SocketIOClient(socketURL: URL(string: "http://localhost:3000")!)
+        socket.connect()
+        
+        
     }
 
     override func didReceiveMemoryWarning() {

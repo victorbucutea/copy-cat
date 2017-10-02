@@ -5,6 +5,8 @@ import android.content.ClipData;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import org.apache.commons.lang3.SerializationException;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
@@ -43,6 +45,8 @@ public class ClipboardMonitorListModel extends LinkedList<ClipboardItem> {
             return false;
         }
 
+        Log.d(TAG, "recording clipped " + text);
+
 
         String firstItem = text.toString();
 
@@ -50,8 +54,12 @@ public class ClipboardMonitorListModel extends LinkedList<ClipboardItem> {
 
             ClipboardItem item = new ClipboardItem(firstItem);
 
-            if (clip.getItemCount() > 1 && clip.getItemAt(1) != null && clip.getItemAt(1).getText() != null) {
-                item.setSource(clip.getItemAt(1).getText().toString());
+            if (clip.getDescription().getLabel() != null) {
+                String label = clip.getDescription().getLabel().toString();
+                if (label.startsWith("incoming")) {
+                    String[] sources = label.split("\\|\\|");
+                    item.setSource(sources[1]);
+                }
             }
 
             addFirst(item);
@@ -66,7 +74,6 @@ public class ClipboardMonitorListModel extends LinkedList<ClipboardItem> {
 
         return false;
     }
-
 
 
     private void storeInSharedPrefs() {
@@ -87,7 +94,11 @@ public class ClipboardMonitorListModel extends LinkedList<ClipboardItem> {
             String clipItem = sharedPrefs.getString("" + i, null);
             if (clipItem != null) {
                 Log.d(TAG, "reading from prefs " + i + " - " + clipItem);
-                add(ClipboardItem.unmarshall(clipItem));
+                try {
+                    add(ClipboardItem.unmarshall(clipItem));
+                } catch (SerializationException se) {
+                    Log.e(TAG, "Error while deserializing a clipboardItem", se);
+                }
             }
         }
     }

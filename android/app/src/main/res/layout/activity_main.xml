@@ -18,19 +18,28 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="?attr/colorPrimaryDark"
             app:popupTheme="@style/AppTheme.PopupOverlay" >
+
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/app_name"
                 android:fontFamily="monospace"
-                android:layout_gravity="left"
-                android:textSize="28sp"
+                android:layout_gravity="start"
+                android:textSize="24sp"
                 android:id="@+id/toolbar_title" />
 
+            <ImageView
+                android:layout_width="90dp"
+                android:layout_height="45dp"
+                app:srcCompat="@drawable/cat_pixel"
+                android:layout_gravity="start"
+                android:id="@+id/imageView2" />
+
         </android.support.v7.widget.Toolbar>
+
 
     </android.support.design.widget.AppBarLayout>
 

@@ -24,6 +24,8 @@
     <string name="app_teaser_text2">As simple as copy/paste on a local device.</string>
     <string name="app_teaser_title">Copy-Cat</string>
     <string name="continue_w_fb">Continue with facebook</string>
+    <string name="connected_msg">Connected to clipboard server! </string>
+    <string name="disconnected_msg">Disconnected from server! Attempting to reconnect</string>
 
     <string name="com_facebook_loginview_log_in_button">Log in</string>
     <string name="com_facebook_loginview_log_out_button">Log out</string>

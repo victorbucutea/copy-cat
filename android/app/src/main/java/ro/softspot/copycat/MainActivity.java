@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -22,6 +23,7 @@ import android.widget.ListView;
 import java.util.List;
 
 import ro.softspot.copycat.service.clipboard.ClipboardMonitorService;
+import ro.softspot.copycat.service.sync.SynchronizationService;
 
 public class MainActivity extends AppCompatActivity {
     private String TAG = "Main";
@@ -47,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
         startService(serviceIntent);
         registerReceiver(new ClipDataReceiver(),new IntentFilter(ClipboardMonitorService.TAG));
+        registerStatusMessages();
     }
-
 
     @Override
     protected void onStop() {
@@ -125,6 +127,25 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    private void registerStatusMessages() {
+        SynchronizationService.getInstance(this).registerForConnectionStatus(new SynchronizationService.ConnectionStatusListener() {
+            @Override
+            public void connected() {
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.content), R.string.connected_msg, Snackbar.LENGTH_SHORT);
+                mySnackbar.show();
+            }
+
+            @Override
+            public void disconnected() {
+                Snackbar mySnackbar = Snackbar.make(findViewById(R.id.content), R.string.disconnected_msg, Snackbar.LENGTH_INDEFINITE);
+                mySnackbar.show();
+
+            }
+        });
     }
 
 
