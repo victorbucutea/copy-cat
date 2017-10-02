@@ -36,7 +36,8 @@ namespace CopyCat
 
         private void OnClipboardChanged()
         {
-            ClipboardChanged?.Invoke(this, EventArgs.Empty);
+              ClipboardChanged?.Invoke(this, EventArgs.Empty);
+           
         }
 
         private static readonly IntPtr WndProcSuccess = IntPtr.Zero;

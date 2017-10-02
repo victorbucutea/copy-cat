@@ -25,6 +25,12 @@ namespace CopyCat
         ObservableCollection<ClipboardItem> items;
         Manager manager;
         Socket socket;
+        /*
+         * Nasty workaround to avoid triggering the 
+         * clipboard change listener ( twice !) when 
+         * setting content to clipboard programmatically
+         */
+        int skipClipboardItem = 0; 
 
 
         public MainWindow()
@@ -124,20 +130,20 @@ namespace CopyCat
 
         private void ClipboardChanged(object sender, EventArgs e)
         {
-            // Handle your clipboard update here, debug logging example:
-            if (Clipboard.ContainsText())
+            if (Clipboard.ContainsText() && skipClipboardItem == 0)
             {
-                AddItem(new ClipboardItem() { IsChecked = true, Source = "Windows", Text = Clipboard.GetText() }, true);
-            }
-        }
-
-        private void AddItem(ClipboardItem item, bool emit)
-        {
-            items.Insert(0,item);
-            if (emit)
-            {
+                AddItem(new ClipboardItem() { IsChecked = true, Source = "Windows", Text = Clipboard.GetText() });
                 socket.Emit("message", Clipboard.GetText(), "Windows");
             }
+
+            if (skipClipboardItem >= 1)
+                skipClipboardItem--;
+        }
+
+        private void AddItem(ClipboardItem item)
+        {
+            items.Insert(0,item);
+         
             foreach (ClipboardItem clipitem in items)
             {
                 if (clipitem != item)
@@ -210,7 +216,10 @@ namespace CopyCat
                             baloonText = baloonText.Substring(0, 30) + "...";
                         }
 
-                        AddItem(new ClipboardItem() { Source = src, Text = text, IsChecked = true },false);
+                        AddItem(new ClipboardItem() { Source = src, Text = text, IsChecked = true });
+                        // work around to disable triggering of clipboard listener
+                        skipClipboardItem = 2;
+                        Clipboard.SetText(text);
                     });
                 }));
             });

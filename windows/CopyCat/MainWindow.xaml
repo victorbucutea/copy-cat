@@ -30,7 +30,7 @@
         </Style>
         <local:ShowMessageCommand x:Key="MessageCommand" />
     </Window.Resources>
-
+    
 
     <Border BorderBrush="#FFBBBBBB" BorderThickness="1" Background="White" Margin="5" >
         <Border.Effect>
